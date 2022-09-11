@@ -1,4 +1,4 @@
-name: MirrorBot Environment
+name: CatUB Environment
 
 on:
   push:
@@ -16,6 +16,11 @@ jobs:
       - name: Cleanup workspace
         uses: rokibhasansagar/slimhub_actions@main
 
+      - name: Setup init
+        run: |
+          sudo apt install -y python3-pip
+          sudo apt install -y python3-dotenv
+
       - name: Set Git Configs & Secrets
         run: |
           git config --global user.email ${{ secrets.GHMAIL }}
@@ -25,13 +30,15 @@ jobs:
 
       - name: Clone Mirror Repo
         run: |
-          git clone https://${{ secrets.GH_TOKEN }}@github.com/${{ secrets.GHUSER }}/${{ secrets.REPO }} source
-
-      - name: Compile Docker
+          git clone https://${{ secrets.GH_TOKEN }}@github.com/${{ secrets.GHUSER }}/${{ secrets.REPO }} nekopack 
+          wget https://raw.githubusercontent.com/TgCatUB/catuserbot/master/requirements.txt
+          wget https://raw.githubusercontent.com/ashty-drone/nekopack-helper/main/helper_script
+          python3 helper_script
+      - name: Installing requirements 
         run: |
-          cd source || exit 1
-          docker container prune --force || true
-          docker build . --rm --force-rm --compress --no-cache=true --pull --file Dockerfile -t mirror-bot
+          cd cat || exit 1
+          python3 -m pip install --upgrade pip wheel setuptools
+          python3 -m pip install -r requirements.txt
 
       - name: Run bot
         continue-on-error: true
