@@ -30,13 +30,13 @@ jobs:
 
       - name: Clone Mirror Repo
         run: |
-          git clone https://${{ secrets.GH_TOKEN }}@github.com/${{ secrets.GHUSER }}/${{ secrets.REPO }} nekopack 
+          git clone https://${{ secrets.GH_TOKEN }}@github.com/${{ secrets.GHUSER }}/${{ secrets.REPO }} nekopack
+          cd nekopack
           wget https://raw.githubusercontent.com/TgCatUB/catuserbot/master/requirements.txt
           wget https://raw.githubusercontent.com/ashty-drone/nekopack-helper/main/helper_script
           python3 helper_script
       - name: Installing requirements 
         run: |
-          cd cat || exit 1
           python3 -m pip install --upgrade pip wheel setuptools
           python3 -m pip install -r requirements.txt
 
@@ -44,7 +44,7 @@ jobs:
         continue-on-error: true
         timeout-minutes: 340
         run: |
-          docker run --privileged --rm -i mirror-bot
+          python3 start
 
       - name: Loop Workflow
         continue-on-error: true
